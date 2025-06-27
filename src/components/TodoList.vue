@@ -2,14 +2,13 @@
   <div class="todo-app">
     <h1>Todo List dengan Axios & JSON Server (CRUD lengkap)</h1>
 
-    
     <form @submit.prevent="addTodo">
       <input v-model="newTodo" placeholder="Tambah todo baru..." required />
       <button type="submit" :disabled="loading">Tambah</button>
     </form>
 
     <p v-if="loading">Memuat data...</p>
-    <p v-if="error" style="color: red;">{{ error }}</p>
+    <p v-if="error" style="color: yellow;">{{ error }}</p>
 
     <ul v-if="todos.length">
       <li v-for="todo in todos" :key="todo.id">
@@ -19,7 +18,6 @@
           @change="toggleCompleted(todo)"
         />
 
-        
         <template v-if="editId !== todo.id">
           <span :style="{ textDecoration: todo.completed ? 'line-through' : 'none' }">
             {{ todo.title }}
@@ -42,205 +40,268 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-const todos = ref([]);
-const newTodo = ref('');
-const loading = ref(false);
-const error = ref('');
-
-const editId = ref(null);
-const editTitle = ref('');
-
-const API_URL = 'http://localhost:3000/todos';
+const todos = ref([])
+const newTodo = ref('')
+const loading = ref(false)
+const error = ref('')
+const editId = ref(null)
+const editTitle = ref('')
+const API_URL = 'http://localhost:3000/todos'
 
 const loadTodos = async () => {
-  loading.value = true;
-  error.value = '';
+  loading.value = true
+  error.value = ''
   try {
-    const response = await axios.get(API_URL);
-    todos.value = response.data;
+    const response = await axios.get(API_URL)
+    todos.value = response.data
   } catch (err) {
-    error.value = 'Gagal memuat data todo.';
-    console.error(err);
+    error.value = 'Gagal memuat data todo.'
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const addTodo = async () => {
-  if (!newTodo.value.trim()) return;
-
-  loading.value = true;
-  error.value = '';
+  if (!newTodo.value.trim()) return
+  loading.value = true
+  error.value = ''
   try {
     const newData = {
       title: newTodo.value,
       completed: false,
-    };
-    const response = await axios.post(API_URL, newData);
-    todos.value.push(response.data);
-    newTodo.value = '';
+    }
+    const response = await axios.post(API_URL, newData)
+    todos.value.push(response.data)
+    newTodo.value = ''
   } catch (err) {
-    error.value = 'Gagal menambah todo.';
-    console.error(err);
+    error.value = 'Gagal menambah todo.'
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const toggleCompleted = async (todo) => {
-  loading.value = true;
-  error.value = '';
+  loading.value = true
+  error.value = ''
   try {
     const response = await axios.put(`${API_URL}/${todo.id}`, {
       ...todo,
       completed: !todo.completed,
-    });
-    const idx = todos.value.findIndex(t => t.id === todo.id);
-    if (idx !== -1) todos.value[idx] = response.data;
+    })
+    const idx = todos.value.findIndex((t) => t.id === todo.id)
+    if (idx !== -1) todos.value[idx] = response.data
   } catch (err) {
-    error.value = 'Gagal memperbarui todo.';
-    console.error(err);
+    error.value = 'Gagal memperbarui todo.'
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const deleteTodo = async (id) => {
-  loading.value = true;
-  error.value = '';
+  loading.value = true
+  error.value = ''
   try {
-    await axios.delete(`${API_URL}/${id}`);
-    todos.value = todos.value.filter(todo => todo.id !== id);
+    await axios.delete(`${API_URL}/${id}`)
+    todos.value = todos.value.filter((todo) => todo.id !== id)
   } catch (err) {
-    error.value = 'Gagal menghapus todo.';
-    console.error(err);
+    error.value = 'Gagal menghapus todo.'
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const startEdit = (todo) => {
-  editId.value = todo.id;
-  editTitle.value = todo.title;
-};
+  editId.value = todo.id
+  editTitle.value = todo.title
+}
 
 const cancelEdit = () => {
-  editId.value = null;
-  editTitle.value = '';
-};
+  editId.value = null
+  editTitle.value = ''
+}
 
 const updateTodo = async (todo) => {
-  if (!editTitle.value.trim()) return;
-
-  loading.value = true;
-  error.value = '';
+  if (!editTitle.value.trim()) return
+  loading.value = true
+  error.value = ''
   try {
     const response = await axios.put(`${API_URL}/${todo.id}`, {
       ...todo,
       title: editTitle.value,
-    });
-    const idx = todos.value.findIndex(t => t.id === todo.id);
-    if (idx !== -1) todos.value[idx] = response.data;
-    editId.value = null;
-    editTitle.value = '';
+    })
+    const idx = todos.value.findIndex((t) => t.id === todo.id)
+    if (idx !== -1) todos.value[idx] = response.data
+    editId.value = null
+    editTitle.value = ''
   } catch (err) {
-    error.value = 'Gagal memperbarui todo.';
-    console.error(err);
+    error.value = 'Gagal memperbarui todo.'
+    console.error(err)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-onMounted(loadTodos);
+onMounted(loadTodos)
 </script>
 
 <style scoped>
 .todo-app {
-  max-width: 420px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  padding: 32px 28px 24px 28px;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  color: #111; 
+  max-width: 600px;
+  margin: 0 auto;
+  background: #B22222;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
 }
 
 h1 {
-  text-align: center;
-  color: #111; 
-  margin-bottom: 24px;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 20px;
 }
 
 form {
   display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
-input[type="text"] {
-  flex: 1;
-  padding: 8px 12px;
+form input[type="text"] {
+  flex: 1 1 250px;
+  padding: 10px 14px;
   border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 1rem;
-  transition: border 0.2s;
+  border-radius: 999px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+  background: #FFA07A;
+  color: #000;
 }
-input[type="text"]:focus {
-  border: 1.5px solid #2563eb;
+
+form input[type="text"]:focus {
+  border-color: #ff0000;
   outline: none;
+  background: #FFA07A;
 }
 
 button {
-  padding: 8px 14px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s;
+  border: none;
 }
+
+button[type="submit"] {
+  background-color: #ff0000;
+  color: white;
+}
+
+button[type="submit"]:hover {
+  background-color: #cc0000;
+}
+
 button:disabled {
-  background: #a5b4fc;
+  background-color: #ffcccc;
   cursor: not-allowed;
-}
-button:not(:disabled):hover {
-  background: #1e40af;
 }
 
 ul {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
   margin: 0;
 }
+
 li {
   display: flex;
   align-items: center;
-  margin: 10px 0;
-  background: #f1f5f9;
-  border-radius: 6px;
-  padding: 8px 10px;
-  transition: background 0.2s;
+  background: #fff;
+  color: #111;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  transition: background-color 0.2s;
 }
+
 li:hover {
-  background: #e0e7ef;
+  background: #f3f4f6;
 }
-li span {
-  flex-grow: 1;
-  margin-left: 8px;
-  display: flex;
-  align-items: center;
-  font-size: 1rem;
-}
+
 input[type="checkbox"] {
-  accent-color: #2563eb;
-  width: 18px;
-  height: 18px;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff0000;
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  background: white;
+  transition: background-color 0.2s, border-color 0.2s;
+  margin-right: 12px;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #ff0000;
+  border-color: #cc0000;
+}
+
+input[type="checkbox"]::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  display: none;
+}
+
+input[type="checkbox"]:checked::after {
+  display: block;
+}
+
+li span {
+  flex: 1;
+  font-size: 16px;
+  text-align: left;
+  color: #111;
+}
+
+li input[type="text"] {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 16px;
+  border-radius: 8px;
+}
+
+li button {
+  margin-left: 8px;
+  background-color: #ff0000;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+li button:hover {
+  background-color: #cc0000;
+}
+
+p {
+  font-size: 14px;
+  color: #f8f8f8;
 }
 </style>

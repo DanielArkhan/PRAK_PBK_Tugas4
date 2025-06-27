@@ -10,15 +10,9 @@ import TodoList from './components/TodoList.vue'
 
 <style>
 body {
-  background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
-  min-height: 100vh;
-  margin: 0;
+  background: linear-gradient(to bottom, #f8fafc 0%, #e0f2fe 100%);
   font-family: 'Segoe UI', Arial, sans-serif;
-}
-#app {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 </style>

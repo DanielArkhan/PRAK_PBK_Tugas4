@@ -2,22 +2,22 @@
   "todos": [
     {
       "id": "2",
-      "title": "Buat Todo List dengan Axios",
+      "title": "Membersihkan Kamar",
       "completed": false
     },
     {
       "id": "b488",
-      "title": "dfsaf",
+      "title": "Mandi",
       "completed": false
     },
     {
       "id": "fa7e",
-      "title": "belajar vue",
+      "title": "Cuci piring",
       "completed": false
     },
     {
       "id": "50a3",
-      "title": "berenang",
+      "title": "Belajar VUE",
       "completed": false
     }
   ]
