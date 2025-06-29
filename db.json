@@ -1,16 +1,6 @@
 {
   "todos": [
     {
-      "id": "2",
-      "title": "Membersihkan Kamar",
-      "completed": false
-    },
-    {
-      "id": "b488",
-      "title": "Mandi",
-      "completed": false
-    },
-    {
       "id": "fa7e",
       "title": "Cuci piring",
       "completed": false
@@ -18,6 +8,16 @@
     {
       "id": "50a3",
       "title": "Belajar VUE",
+      "completed": false
+    },
+    {
+      "id": "1de6",
+      "title": "Membersihkan Kamar",
+      "completed": false
+    },
+    {
+      "id": "f744",
+      "title": "Mandi",
       "completed": false
     }
   ]
